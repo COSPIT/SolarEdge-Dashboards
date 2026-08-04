@@ -9,7 +9,7 @@ const MIN_SCREENSHOT_SIZE = 20_000;
 const MAX_ATTEMPTS = 3;
 
 // The published webpage checks for a new screenshot every 10 minutes.
-const PAGE_REFRESH_MS = 10 * 60 * 1000;
+const PAGE_REFRESH_MS = 60 * 1000;
 
 const sites = [
   {
