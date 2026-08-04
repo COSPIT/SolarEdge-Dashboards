@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
   schedule:
-    # Every 15 minutes, deliberately avoiding the start of the hour.
+    # Run every 15 minutes, avoiding the busiest start-of-hour period.
     - cron: "7,22,37,52 * * * *"
 
 permissions:
@@ -24,7 +24,7 @@ jobs:
   capture:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Check out repository
@@ -34,7 +34,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          cache: npm
+          package-manager-cache: false
 
       - name: Install Node.js dependencies
         run: npm install --no-audit --no-fund
