@@ -1,24 +1,17 @@
 name: Capture and publish SolarEdge dashboards
 
 on:
-  push:
-    branches:
-      - main
-
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: solaredge-pages
   cancel-in-progress: true
 
 jobs:
-  capture:
-    if: github.ref == 'refs/heads/main'
+  capture-and-publish:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -41,24 +34,28 @@ jobs:
       - name: Capture the four SolarEdge dashboards
         run: npm run capture
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+      - name: Prepare GitHub Pages content
+        run: |
+          touch public/.nojekyll
 
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: public
+      - name: Publish to gh-pages branch
+        env:
+          PAGES_PAT: ${{ secrets.PAGES_PAT }}
+        run: |
+          cd public
 
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: capture
-    runs-on: ubuntu-latest
+          git init
+          git config user.name "SolarEdge Dashboard Bot"
+          git config user.email "124332620+COSPIT@users.noreply.github.com"
 
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+          git checkout -b gh-pages
 
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          git add --all
+
+          git commit \
+            -m "Update SolarEdge dashboards $(TZ=Australia/Perth date '+%Y-%m-%d %H:%M:%S %Z')"
+
+          git remote add origin \
+            "https://x-access-token:${PAGES_PAT}@github.com/${GITHUB_REPOSITORY}.git"
+
+          git push --force origin gh-pages
