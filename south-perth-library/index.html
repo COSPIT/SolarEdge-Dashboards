@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,
+             initial-scale=1,
+             maximum-scale=1"
+  >
+
+  <title>South Perth Library</title>
+
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+      cursor: none;
+    }
+
+    #dashboard {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <img
+    id="dashboard"
+    src="../images/south-perth-library.png?v=1789849896232"
+    alt="South Perth Library SolarEdge dashboard"
+  >
+
+  <script>
+    const dashboard =
+      document.getElementById("dashboard");
+
+    const imageUrl =
+      "../images/south-perth-library.png";
+
+    function refreshDashboard() {
+      const preload = new Image();
+
+      preload.onload = function () {
+        dashboard.src = preload.src;
+      };
+
+      preload.src =
+        imageUrl +
+        "?refresh=" +
+        new Date().getTime();
+    }
+
+    /*
+     * Check GitHub Pages for a new screenshot
+     * every 10 minutes.
+     */
+    window.setInterval(
+      refreshDashboard,
+      60000
+    );
+  </script>
+</body>
+</html>
